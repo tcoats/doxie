@@ -33,15 +33,15 @@ module.exports = (hub) => {
   })
 
   let handle = null
-  const next = () => { handle = setTimeout(tick, 5000) }
+  const next = () => { handle = setTimeout(tick, 15000) } // 10s
   const tick = () => {
     async.parallel(Object.keys(instances).map((ip) => (cb) => {
       request
         .get(`http://${ip}/hello.json`)
         .set('Accept', 'application/json')
         .timeout({
-          response: 1000,
-          deadline: 4000,
+          response: 5 * 1000, // 5s
+          deadline: 10 * 1000 // 10s
         })
         .then((res) => {
           if (res.ok == null) {

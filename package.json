@@ -6,7 +6,9 @@
   "author": "Thomas Coats <github@voodoolabs.net>",
   "license": "MIT",
   "dependencies": {
+    "moment": "^2.20.1",
     "node-upnp-ssdp": "^0.1.1",
+    "nodemailer": "^4.4.2",
     "odo-async": "^1.0.2",
     "odo-hub": "^3.0.2",
     "superagent": "^3.8.2"
