@@ -1,5 +1,6 @@
 const async = require('odo-async')
 const request = require('superagent')
+const config = require('./config.test')
 
 module.exports = (hub) => {
   const instances = {}
@@ -33,16 +34,13 @@ module.exports = (hub) => {
   })
 
   let handle = null
-  const next = () => { handle = setTimeout(tick, 15000) } // 10s
+  const next = () => { handle = setTimeout(tick, config.heartbeat) }
   const tick = () => {
     async.parallel(Object.keys(instances).map((ip) => (cb) => {
       request
         .get(`http://${ip}/hello.json`)
         .set('Accept', 'application/json')
-        .timeout({
-          response: 5 * 1000, // 5s
-          deadline: 10 * 1000 // 10s
-        })
+        .timeout(config.heartbeattimeout)
         .then((res) => {
           if (res.ok == null) {
             hub.emit('{ip} – trouble talking to doxie – {message}', {
@@ -50,9 +48,10 @@ module.exports = (hub) => {
               message: res.text
             })
           }
-          else if (res.body.name.indexOf('Doxie ') != 0) {
-            hub.emit('{ip} – doxie name does not start with "Doxie "', {
-              ip: ip
+          else if (res.body.name.indexOf(config.nameprefix) != 0) {
+            hub.emit('{ip} – doxie name does not start with "{prefix}"', {
+              ip: ip,
+              prefix: config.nameprefix
             })
           }
           cb()

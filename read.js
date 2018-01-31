@@ -1,17 +1,13 @@
 const async = require('odo-async')
 const request = require('superagent')
+const config = require('./config.test')
 const email = require('./email')
-
-const standardtimeout = {
-  response: 1 * 1000, // 1s
-  deadline: 4 * 1000, // 4s
-}
 
 const getallscans = (ip, cb) => {
   request
     .get(`http://${ip}/scans.json`)
     .set('Accept', 'application/json')
-    .timeout(standardtimeout)
+    .timeout(config.requesttimeout)
     .then((res) => {
       if (res.ok != null) return cb(null, res.body)
       cb(res.text)
@@ -22,7 +18,7 @@ const getallscans = (ip, cb) => {
 const downloadscan = (ip, path, cb) => {
   request
     .get(`http://${ip}/scans${path}`)
-    .timeout(standardtimeout)
+    .timeout(config.requesttimeout)
     .then((res) => {
       if (res.ok != null) return cb(null, res.body)
       cb(res.text)
@@ -35,7 +31,7 @@ const deletescans = (ip, files, cb) => {
     .post(`http://${ip}/scans/delete.json`)
     .set('Content-Type', 'application/json')
     .send(Object.keys(files))
-    .timeout(standardtimeout)
+    .timeout(config.requesttimeout)
     .then((res) => {
       if (res.status == 204) return cb(null)
       cb(res.text)

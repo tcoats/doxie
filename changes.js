@@ -1,15 +1,12 @@
 const async = require('odo-async')
 const request = require('superagent')
-const sendingdelay = 60 * 60 * 1000 // 1m
+const config = require('./config.test')
 
 const getrecentscan = (ip, cb) => {
   request
     .get(`http://${ip}/scans/recent.json`)
     .set('Accept', 'application/json')
-    .timeout({
-      response: 1 * 1000, // 1s
-      deadline: 4 * 1000, // 4s
-    })
+    .timeout(config.requesttimeout)
     .then((res) => {
       if (res.status == 204) return cb(null, null)
       if (res.ok != null) return cb(null, res.body.path)
@@ -38,7 +35,7 @@ module.exports = (hub) => {
   })
 
   let handle = null
-  const next = () => { handle = setTimeout(tick, 10 * 1000) } // 10s
+  const next = () => { handle = setTimeout(tick, config.changes) } // 10s
   const tick = () => {
     const now = new Date().getTime()
     if (Object.keys(instances).length == 0)
@@ -59,8 +56,8 @@ module.exports = (hub) => {
             console.log(`${ip} – new scan`)
             instances[ip] = { changedat: now, recentscan: result }
           }
-          else if (i.changedat < now - sendingdelay) {
-            hub.emit('{ip} - scanning complete', instances[ip])
+          else if (i.changedat < now - config.waitformorescans) {
+            hub.emit('{ip} – scanning complete', instances[ip])
             instances[ip] = { changedat: now, recentscan: null }
             return cb()
           }

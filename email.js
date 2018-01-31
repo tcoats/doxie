@@ -1,14 +1,15 @@
 const nodemailer = require('nodemailer')
 const moment = require('moment')
 const path = require('path')
+const config = require('./config.test')
 
 module.exports = (ip, files, cb) => {
   const message = {
-    from: '"Mysterious Forces" <it@jswap.co.nz>',
-    to: '"Thomas Coats" <thomas.coats@jswap.co.nz>',
-    subject: `${moment().format('YYYY-MM-DD')} ${Object.keys(files).length} scanned files`,
-    text: '',
-    html: '',
+    from: config.from,
+    to: config.to,
+    subject: config.subject || `${moment().format('YYYY-MM-DD')} – Doxie scanned ${Object.keys(files).length} files`,
+    text: config.text || '',
+    html: config.html || '',
     attachments: Object.keys(files).map((path) => {
       return {
         filename: path.parse(path).base,
@@ -17,15 +18,7 @@ module.exports = (ip, files, cb) => {
     })
   }
 
-  const transport = nodemailer.createTransport({
-    host: 'smtp.jswap.co.nz',
-    port: 465,
-    secure: true,
-    auth: {
-      user: 'awesome',
-      pass: 'awesome'
-    }
-  })
+  const transport = nodemailer.createTransport(config.transport)
   transport.sendMail(message, (err, info) => {
     if (err) return cb(err)
     cb()

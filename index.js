@@ -6,7 +6,7 @@ hub.all((e, description, p, cb) => {
 })
 
 require('./read')(hub)
-require('./poll')(hub)
+require('./changes')(hub)
 require('./heartbeat')(hub)
 const ssdp = require('./ssdp')(hub)
 
