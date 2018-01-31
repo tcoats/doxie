@@ -1,6 +1,6 @@
 const async = require('odo-async')
 const request = require('superagent')
-const config = require('./config.test')
+const config = require('./config')
 const email = require('./email')
 
 const getallscans = (ip, cb) => {

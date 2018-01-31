@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const moment = require('moment')
 const path = require('path')
-const config = require('./config.test')
+const config = require('./config')
 
 module.exports = (ip, files, cb) => {
   const message = {

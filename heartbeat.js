@@ -1,6 +1,6 @@
 const async = require('odo-async')
 const request = require('superagent')
-const config = require('./config.test')
+const config = require('./config')
 
 module.exports = (hub) => {
   const instances = {}
