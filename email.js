@@ -4,18 +4,19 @@ const path = require('path')
 const config = require('./config')
 
 module.exports = (ip, files, cb) => {
+  files = Object.keys(files).map((filepath) => {
+    return {
+      filename: path.basename(filepath),
+      content: files[filepath]
+    }
+  })
   const message = {
     from: config.from,
     to: config.to,
-    subject: config.subject || `${moment().format('YYYY-MM-DD')} – Doxie scanned ${Object.keys(files).length} files`,
+    subject: config.subject || `${moment().format('YYYY-MM-DD hh:mma')} – Doxie scanned ${files.length} files`,
     text: config.text || '',
     html: config.html || '',
-    attachments: Object.keys(files).map((path) => {
-      return {
-        filename: path.parse(path).base,
-        content: files[path]
-      }
-    })
+    attachments: files
   }
 
   const transport = nodemailer.createTransport(config.transport)

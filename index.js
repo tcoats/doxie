@@ -1,10 +1,5 @@
 const hub = require('odo-hub')()
 
-hub.all((e, description, p, cb) => {
-  console.log(description)
-  cb()
-})
-
 require('./read')(hub)
 require('./changes')(hub)
 require('./heartbeat')(hub)

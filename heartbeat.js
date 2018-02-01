@@ -7,6 +7,7 @@ module.exports = (hub) => {
   hub.every('{ip} – doxie name does not start with "Doxie "', (p, cb) => {
     cb()
     if (instances[p.ip] != null) {
+      console.log(`${p.ip} – bye bye doxie`)
       hub.emit('{ip} – bye bye doxie', p)
       delete instances[p.ip]
     }
@@ -14,6 +15,7 @@ module.exports = (hub) => {
   hub.every('{ip} – trouble talking to doxie – {message}', (p, cb) => {
     cb()
     if (instances[p.ip] != null) {
+      console.log(`${p.ip} – bye bye doxie`)
       hub.emit('{ip} – bye bye doxie', p)
       delete instances[p.ip]
     }
@@ -21,6 +23,7 @@ module.exports = (hub) => {
   hub.every('{ip} – doxie available on ssdp', (p, cb) => {
     cb()
     if (instances[p.ip] == null) {
+      console.log(`${p.ip} – seen doxie for the first time`)
       hub.emit('{ip} – seen doxie for the first time', p)
       instances[p.ip] = true
     }
@@ -28,6 +31,7 @@ module.exports = (hub) => {
   hub.every('{ip} – doxie unavailable on ssdp', (p, cb) => {
     cb()
     if (instances[p.ip] != null) {
+      console.log(`${p.ip} – bye bye doxie`)
       hub.emit('{ip} – bye bye doxie', p)
       delete instances[p.ip]
     }

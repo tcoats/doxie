@@ -18,7 +18,7 @@ const getallscans = (ip, cb) => {
 const downloadscan = (ip, path, cb) => {
   request
     .get(`http://${ip}/scans${path}`)
-    .timeout(config.requesttimeout)
+    .timeout(config.downloadtimeout)
     .then((res) => {
       if (res.ok != null) return cb(null, res.body)
       cb(res.text)
@@ -52,28 +52,28 @@ module.exports = (hub) => {
         return
       }
       const files = {}
-      console.log(`${ip} – downloading ${results.length} files`)
-      async.parallel(results.map((scan) => (cb) => {
+      console.log(`${p.ip} – downloading ${results.length} files`)
+      async.series(results.map((scan) => (cb) => {
         downloadscan(p.ip, scan.name, (err, file) => {
           files[scan.name] = file
           cb()
         })
       }), () => {
-        console.log(`${ip} – emailing ${results.length} files`)
-        emailfiles(ip, files, (err) => {
+        console.log(`${p.ip} – emailing ${results.length} files`)
+        email(p.ip, files, (err) => {
           if (err != null) {
             console.error(err)
             delete instances[p.ip]
             return
           }
-          console.log(`${ip} – deleting ${results.length} files`)
-          deletefiles(ip, files, (err) => {
+          console.log(`${p.ip} – deleting ${results.length} files`)
+          deletescans(p.ip, files, (err) => {
             if (err != null) {
               console.error(err)
               delete instances[p.ip]
               return
             }
-            console.log(`${ip} – scans have been processed`)
+            console.log(`${p.ip} – scans have been processed`)
             delete instances[p.ip]
           })
         })

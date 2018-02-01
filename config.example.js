@@ -10,6 +10,10 @@ module.exports = {
     response: 1 * 1000, // 1s
     deadline: 4 * 1000, // 4s
   },
+  downloadtimeout: {
+    response: 5 * 1000, // 5s
+    deadline: 10 * 1000, // 10s
+  },
   nameprefix: 'Doxie ',
   from: 'sender@server.com',
   to: 'receiver@sender.com',
