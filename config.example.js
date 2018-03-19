@@ -14,6 +14,9 @@ module.exports = {
     response: 5 * 1000, // 5s
     deadline: 10 * 1000, // 10s
   },
+  hardcoded: [
+    '192.168.1.1'
+  ],
   nameprefix: 'Doxie ',
   from: 'sender@server.com',
   to: 'receiver@sender.com',
