@@ -1,4 +1,5 @@
 module.exports = {
+  ssdp: true,
   waitformorescans: 60 * 60 * 1000, // 1m
   heartbeat: 15 * 1000, // 15s
   heartbeattimeout: {
